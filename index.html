@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="传统颜色">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<title>传统颜色</title>
+<style>
+:root{
+  --bg:#090909;--bg2:#11100f;--surface:#151413;--surface2:#1c1917;
+  --text:#eee8df;--muted:#9c9489;--line:rgba(230,220,205,.14);
+  --warm:#d7c1a0;--shadow:0 18px 50px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg)}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;color:var(--text);
+  font-family:"Noto Serif SC","Songti SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(153,104,70,.09),transparent 28rem),
+    radial-gradient(circle at 92% 14%,rgba(107,120,128,.07),transparent 24rem),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+}
+.page{
+  width:min(1220px,100%);margin:0 auto;
+  padding:max(28px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right))
+          max(30px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))
+}
+header{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid var(--line)
+}
+.brand{display:flex;align-items:center;gap:14px}
+.mark{
+  width:56px;height:56px;display:grid;place-items:center;border-radius:17px;
+  border:1px solid rgba(215,193,160,.48);background:rgba(115,87,64,.14);
+  color:#ead7ba;font-size:29px;font-weight:800
+}
+h1{margin:0;color:#f0e2cf;font-size:clamp(28px,4vw,42px);letter-spacing:.02em}
+.sub{margin:5px 0 0;color:var(--muted);font-size:12px}
+.back{color:var(--muted);text-decoration:none;font-size:12px;white-space:nowrap}
+.back:hover{color:var(--text)}
+.notice{
+  margin-bottom:24px;padding:16px 18px;border:1px solid var(--line);border-radius:17px;
+  background:linear-gradient(180deg,rgba(31,28,25,.82),rgba(20,18,17,.82));
+  color:#c7bfb4;font-size:13px;line-height:1.8
+}
+.notice b{color:#ead7ba}
+.toolbar{
+  display:grid;grid-template-columns:minmax(220px,1fr) auto;gap:12px;align-items:center;
+  margin-bottom:18px
+}
+.search{
+  width:100%;padding:13px 15px;border-radius:14px;border:1px solid var(--line);
+  background:#10100f;color:var(--text);font:inherit;outline:none
+}
+.search:focus{border-color:rgba(215,193,160,.5)}
+.filters{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.filter{
+  border:1px solid var(--line);background:#12110f;color:var(--muted);
+  padding:9px 12px;border-radius:999px;font:inherit;font-size:12px;cursor:pointer
+}
+.filter.active{color:#fff;border-color:rgba(215,193,160,.55);background:#26211c}
+.count{margin:0 0 14px;color:#7f786f;font-size:11px}
+.palette{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:14px;
+  margin-bottom:36px
+}
+.color-card{
+  min-width:0;border:1px solid transparent;background:transparent;color:inherit;
+  padding:10px 6px 12px;border-radius:18px;cursor:pointer;font:inherit;text-align:center;
+  transition:.16s ease
+}
+.color-card:hover{background:rgba(255,255,255,.025);border-color:var(--line);transform:translateY(-2px)}
+.swatch{
+  width:min(92px,72%);aspect-ratio:1;margin:0 auto 10px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 24px rgba(0,0,0,.25),inset 0 0 0 1px rgba(0,0,0,.08)
+}
+.color-card strong{display:block;color:#eee7dd;font-size:15px}
+.color-card small{display:block;margin-top:4px;color:var(--muted);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.section-title{margin:0 0 8px;color:#ead7ba;font-size:19px}
+.section-copy{margin:0 0 16px;color:var(--muted);font-size:12px;line-height:1.7}
+.studio{
+  padding:18px;border:1px solid var(--line);border-radius:20px;
+  background:linear-gradient(180deg,var(--surface2),var(--surface));box-shadow:var(--shadow)
+}
+.studio-controls{
+  display:flex;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:14px
+}
+.control{display:flex;flex-direction:column;gap:6px;min-width:150px}
+.control label{color:var(--muted);font-size:10px;letter-spacing:.08em}
+select,input[type=range]{
+  min-height:42px;border:1px solid var(--line);border-radius:11px;background:#0f0f0e;color:var(--text);
+  padding:9px 10px;font:inherit
+}
+.brush-preview{display:flex;align-items:center;gap:8px;min-height:42px}
+.dot{width:24px;height:24px;border-radius:50%;border:1px solid rgba(255,255,255,.25)}
+.current-color{color:#ddd5ca;font-size:12px}
+.action{
+  min-height:42px;padding:9px 14px;border-radius:11px;border:1px solid var(--line);
+  background:#161513;color:#d9d1c7;font:inherit;font-size:12px;cursor:pointer
+}
+.action:hover{border-color:rgba(215,193,160,.5)}
+.canvas-wrap{
+  width:100%;aspect-ratio:16/7;border:1px solid rgba(255,255,255,.13);border-radius:15px;
+  overflow:hidden;background:#f5f1e8;touch-action:none
+}
+canvas{display:block;width:100%;height:100%;cursor:crosshair}
+footer{
+  display:flex;justify-content:center;align-items:center;gap:8px;margin-top:38px;padding-top:18px;
+  border-top:1px solid var(--line);color:#7e776f;font-size:11px
+}
+footer a{color:inherit;text-decoration:none}
+footer a:hover{color:var(--text)}
+.overlay{
+  position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;
+  padding:18px;background:rgba(0,0,0,.64);backdrop-filter:blur(5px)
+}
+.overlay.open{display:flex}
+.detail{
+  position:relative;width:min(700px,100%);max-height:min(82vh,760px);overflow:auto;
+  padding:24px;border:1px solid var(--line);border-radius:20px;background:#11110f;box-shadow:0 24px 70px rgba(0,0,0,.56)
+}
+.close{
+  position:absolute;top:12px;right:12px;width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--line);background:#171613;color:var(--text);font-size:22px;cursor:pointer
+}
+.detail-top{display:grid;grid-template-columns:130px 1fr;gap:20px;align-items:center;padding-right:38px}
+.detail-swatch{width:120px;height:120px;border-radius:50%;border:1px solid rgba(255,255,255,.24);box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.detail h2{margin:0;color:#f1e5d3;font-size:30px}
+.detail .common{margin-top:5px;color:var(--muted);font-size:12px}
+.hex{margin-top:9px;color:#d8c9b5;font:600 13px ui-monospace,SFMono-Regular,Consolas,monospace}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:19px 0}
+.fact{padding:11px;border:1px solid var(--line);border-radius:12px;background:#161513}
+.fact span{display:block;margin-bottom:4px;color:#7f786f;font-size:9px}
+.fact strong{font-size:12px;color:#ddd4c7;overflow-wrap:anywhere}
+.detail p{margin:0;color:#c7bfb4;font-size:13px;line-height:1.8}
+.story{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.story b{display:block;margin-bottom:5px;color:#d9c3a5;font-size:11px}
+.source{margin-top:14px;color:#777068;font-size:10px;line-height:1.65}
+@media(max-width:760px){
+  .toolbar{grid-template-columns:1fr}.filters{justify-content:flex-start}
+  .palette{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+  .swatch{width:min(78px,78%)}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .canvas-wrap{aspect-ratio:4/3}
+}
+@media(max-width:520px){
+  .page{padding-left:13px;padding-right:13px}
+  .mark{width:50px;height:50px;font-size:27px}.brand h1{font-size:28px}.back{font-size:11px}
+  .palette{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .color-card{padding-left:2px;padding-right:2px}
+  .detail-top{grid-template-columns:92px 1fr;gap:14px}.detail-swatch{width:88px;height:88px}.detail h2{font-size:25px}
+  .studio-controls{align-items:stretch}.control{flex:1 1 135px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+<header>
+  <div class="brand">
+    <div class="mark" aria-hidden="true">色</div>
+    <div><h1>传统颜色</h1><p class="sub">色名 · 色系 · 色度 · 文化小记 · 试色画布</p></div>
+  </div>
+  <a class="back" href="https://noagrp.github.io/zhong/">返回 中</a>
+</header>
+
+<div class="notice">
+  <b>关于颜色准确度</b><br>
+  本页保存 GB/T 31430-2015《中国传统色色名及色度特性》所列典型色度数据，并转换为屏幕 sRGB 参考色。国家标准色度坐标是资料依据；HEX 只用于现代屏幕显示。不同显示器、亮度、色彩管理及实物材料都会造成视觉差异。
+</div>
+
+<section aria-label="传统颜色资料">
+  <div class="toolbar">
+    <input class="search" id="search" type="search" placeholder="搜索颜色：朱红、胭脂红、鹅黄…" aria-label="搜索传统颜色">
+    <div class="filters" id="filters"></div>
+  </div>
+  <p class="count" id="count"></p>
+  <div class="palette" id="palette"></div>
+</section>
+
+<section aria-labelledby="studioTitle">
+  <h2 class="section-title" id="studioTitle">试色画布</h2>
+  <p class="section-copy">选择传统颜色，在画布上自由试色。画布只保存在当前页面中，不会上传。</p>
+  <div class="studio">
+    <div class="studio-controls">
+      <div class="control">
+        <label for="colorSelect">传统颜色</label>
+        <select id="colorSelect"></select>
+      </div>
+      <div class="control">
+        <label for="brushSize">笔刷大小</label>
+        <input id="brushSize" type="range" min="2" max="42" value="12">
+      </div>
+      <div class="brush-preview"><span class="dot" id="brushDot"></span><span class="current-color" id="currentColor"></span></div>
+      <button class="action" id="undoBtn" type="button">撤销</button>
+      <button class="action" id="clearBtn" type="button">清空</button>
+    </div>
+    <div class="canvas-wrap" id="canvasWrap"><canvas id="paintCanvas"></canvas></div>
+  </div>
+</section>
+
+<footer><a href="https://noagrp.github.io/home/">noagrp home</a><span>·</span><a href="https://noagrp.github.io/zhong/">中</a></footer>
+</main>
+
+<div class="overlay" id="overlay" aria-hidden="true">
+  <article class="detail" id="detail" role="dialog" aria-modal="true" aria-labelledby="detailTitle">
+    <button class="close" id="closeBtn" type="button" aria-label="关闭">×</button>
+  </article>
+</div>
+
+<script src="./src/color-engine.js"></script>
+<script>
+(async()=>{
+  const $=id=>document.getElementById(id);
+  try{
+    const engine=await loadTraditionalColorEngine();
+    let family="全部", query="";
+    const filters=["全部",...engine.families()];
+
+    $("filters").innerHTML=filters.map((f,i)=>'<button type="button" class="filter'+(i===0?' active':'')+'" data-family="'+f+'">'+f+'</button>').join("");
+    $("filters").querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{
+      family=btn.dataset.family;
+      $("filters").querySelectorAll(".filter").forEach(b=>b.classList.toggle("active",b===btn));
+      render();
+    }));
+
+    function render(){
+      const list=engine.filter(family,query);
+      $("count").textContent=list.length+" 个颜色";
+      $("palette").innerHTML=list.map(item=>{
+        const hex=engine.displayHex(item);
+        return '<button class="color-card" type="button" data-id="'+item.id+'"><span class="swatch" style="background:'+hex+'"></span><strong>'+item.name+'</strong><small>'+item.commonName+'</small></button>';
+      }).join("");
+      $("palette").querySelectorAll(".color-card").forEach(btn=>btn.addEventListener("click",()=>show(btn.dataset.id)));
+    }
+    $("search").addEventListener("input",e=>{query=e.target.value;render();});
+
+    function show(id){
+      const item=engine.get(id); if(!item)return;
+      const hex=engine.displayHex(item);
+      const rgb=engine.displayRGB(item);
+      $("detail").innerHTML=
+        '<button class="close" id="closeDynamic" type="button" aria-label="关闭">×</button>'+
+        '<div class="detail-top"><div class="detail-swatch" style="background:'+hex+'"></div><div><h2 id="detailTitle">'+item.name+'</h2><div class="common">习惯用色名 · '+item.commonName+'</div><div class="hex">屏幕参考 '+hex+' · rgb('+rgb.join(", ")+')</div></div></div>'+
+        '<div class="facts">'+
+          '<div class="fact"><span>色系</span><strong>'+item.family+'</strong></div>'+
+          '<div class="fact"><span>Y₁₀</span><strong>'+item.standard.Y10+'</strong></div>'+
+          '<div class="fact"><span>x₁₀ / y₁₀</span><strong>'+item.standard.x10+' / '+item.standard.y10+'</strong></div>'+
+          '<div class="fact"><span>中国颜色体系</span><strong>'+item.standard.cns+'</strong></div>'+
+        '</div>'+
+        '<p>'+item.summary+'</p>'+
+        '<div class="story"><b>文化小记</b><p>'+item.culturalNote+'</p></div>'+
+        '<div class="source">数据依据：GB/T 31430-2015《中国传统色色名及色度特性》。屏幕 HEX/RGB 由网页根据色度坐标计算，仅作显示参考。</div>';
+      $("overlay").classList.add("open");$("overlay").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
+      $("closeDynamic").addEventListener("click",close);
+    }
+    function close(){ $("overlay").classList.remove("open");$("overlay").setAttribute("aria-hidden","true");document.body.style.overflow=""; }
+    $("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))close();});
+    document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+
+    const all=engine.list();
+    $("colorSelect").innerHTML=all.map(item=>'<option value="'+item.id+'">'+item.name+' · '+item.commonName+'</option>').join("");
+
+    const canvas=$("paintCanvas"), wrap=$("canvasWrap"), ctx=canvas.getContext("2d");
+    let drawing=false,last=null,history=[];
+    function activeItem(){return engine.get($("colorSelect").value)||all[0];}
+    function updateBrush(){
+      const item=activeItem(),hex=engine.displayHex(item);
+      $("brushDot").style.background=hex;
+      $("brushDot").style.width=Math.max(10,Math.min(34,Number($("brushSize").value)))+"px";
+      $("brushDot").style.height=$("brushDot").style.width;
+      $("currentColor").textContent=item.name+" · "+hex;
+    }
+    $("colorSelect").addEventListener("change",updateBrush);$("brushSize").addEventListener("input",updateBrush);
+
+    function resizeCanvas(){
+      const rect=wrap.getBoundingClientRect(),dpr=Math.max(1,window.devicePixelRatio||1);
+      const snapshot=canvas.width&&canvas.height?canvas.toDataURL():null;
+      canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);ctx.lineCap="round";ctx.lineJoin="round";
+      ctx.fillStyle="#F5F1E8";ctx.fillRect(0,0,rect.width,rect.height);
+      if(snapshot){const img=new Image();img.onload=()=>ctx.drawImage(img,0,0,rect.width,rect.height);img.src=snapshot;}
+    }
+    function saveState(){ if(history.length>20)history.shift();history.push(canvas.toDataURL()); }
+    function point(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
+    canvas.addEventListener("pointerdown",e=>{saveState();drawing=true;last=point(e);canvas.setPointerCapture(e.pointerId);});
+    canvas.addEventListener("pointermove",e=>{
+      if(!drawing)return;const p=point(e),item=activeItem();
+      ctx.strokeStyle=engine.displayHex(item);ctx.lineWidth=Number($("brushSize").value);
+      ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;
+    });
+    const stop=()=>{drawing=false;last=null;};
+    canvas.addEventListener("pointerup",stop);canvas.addEventListener("pointercancel",stop);
+    $("clearBtn").addEventListener("click",()=>{saveState();const r=canvas.getBoundingClientRect();ctx.fillStyle="#F5F1E8";ctx.fillRect(0,0,r.width,r.height);});
+    $("undoBtn").addEventListener("click",()=>{
+      const src=history.pop();if(!src)return;const img=new Image();const r=canvas.getBoundingClientRect();
+      img.onload=()=>{ctx.fillStyle="#F5F1E8";ctx.fillRect(0,0,r.width,r.height);ctx.drawImage(img,0,0,r.width,r.height);};img.src=src;
+    });
+
+    render();updateBrush();requestAnimationFrame(resizeCanvas);
+    window.addEventListener("resize",()=>{clearTimeout(window.__ctsResize);window.__ctsResize=setTimeout(resizeCanvas,180);});
+    if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }catch(err){
+    $("palette").innerHTML='<div class="notice">颜色资料载入失败，请刷新页面后再试。</div>';
+  }
+})();
+</script>
+</body>
+</html>
