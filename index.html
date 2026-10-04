@@ -253,13 +253,17 @@ footer a:hover{color:var(--text)}
         '<div class="detail-top"><div class="detail-swatch" style="background:'+hex+'"></div><div><h2 id="detailTitle">'+item.name+'</h2><div class="common">习惯用色名 · '+item.commonName+'</div><div class="hex">屏幕参考 '+hex+' · rgb('+rgb.join(", ")+')</div></div></div>'+
         '<div class="facts">'+
           '<div class="fact"><span>色系</span><strong>'+item.family+'</strong></div>'+
-          '<div class="fact"><span>Y₁₀</span><strong>'+item.standard.Y10+'</strong></div>'+
-          '<div class="fact"><span>x₁₀ / y₁₀</span><strong>'+item.standard.x10+' / '+item.standard.y10+'</strong></div>'+
-          '<div class="fact"><span>中国颜色体系</span><strong>'+item.standard.cns+'</strong></div>'+
+          (Number.isFinite(item.standard.Y10)
+            ? '<div class="fact"><span>Y₁₀</span><strong>'+item.standard.Y10+'</strong></div>'+
+              '<div class="fact"><span>x₁₀ / y₁₀</span><strong>'+item.standard.x10+' / '+item.standard.y10+'</strong></div>'+
+              '<div class="fact"><span>中国颜色体系</span><strong>'+item.standard.cns+'</strong></div>'
+            : '<div class="fact"><span>标准编号</span><strong>'+item.standard.sourceIndex+'</strong></div>'+
+              '<div class="fact"><span>Lab</span><strong>'+item.standard.L+' / '+item.standard.a+' / '+item.standard.b+'</strong></div>'+
+              '<div class="fact"><span>L / C / H</span><strong>'+item.standard.L+' / '+item.standard.C+' / '+item.standard.H+'</strong></div>')+
         '</div>'+
         '<p>'+item.summary+'</p>'+
         '<div class="story"><b>文化小记</b><p>'+item.culturalNote+'</p></div>'+
-        '<div class="source">数据依据：GB/T 31430-2015《中国传统色色名及色度特性》。屏幕 HEX/RGB 由网页根据色度坐标计算，仅作显示参考。</div>';
+        '<div class="source">数据依据：GB/T 31430-2015《中国传统色色名及色度特性》；部分青色条目同时依据故宫博物院技术研究中引用的标准编号与 Lab/LCH 数据。屏幕 HEX/RGB 由网页换算，仅作显示参考。</div>';
       $("overlay").classList.add("open");$("overlay").setAttribute("aria-hidden","false");document.body.style.overflow="hidden";
       $("closeDynamic").addEventListener("click",close);
     }
